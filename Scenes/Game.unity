@@ -244,6 +244,8 @@ MonoBehaviour:
   inGameScore: {fileID: 718848700}
   menuScore: {fileID: 2125492031}
   menuMaxScore: {fileID: 164707491}
+  minWorldSpeed: 1.75
+  worldSpeedIncreasePoint: 0.05
   StartGame:
     m_PersistentCalls:
       m_Calls:
@@ -334,6 +336,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  ChangeSpeed:
+    m_PersistentCalls:
+      m_Calls: []
   ChangeScore:
     m_PersistentCalls:
       m_Calls: []
@@ -1186,14 +1191,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 2
-  difficultSpeedMultiplier: 1
-  startSpeed: 2
-  defaultDifficult: 1
-  difficultPoint: 0.1
+  SpeedMultiplier: 2
   prefab: {fileID: 7564707063280714804, guid: 05dce6316d9dd7b41a08b9b811610711, type: 3}
   MinHeight: 2
   MaxHeight: 7
-  distance: 4
+  distance: 5
   shift: 0
   startDistance: 10
 --- !u!1 &1050867962
@@ -1351,14 +1353,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 2
-  difficultSpeedMultiplier: 1
-  startSpeed: 4
-  defaultDifficult: 1
-  difficultPoint: 0.1
+  SpeedMultiplier: 4
   prefab: {fileID: 5077060027054132100, guid: 20c8e751d2c06e04c99cefb34200e32a, type: 3}
   MinHeight: 0
   MaxHeight: 5
-  distance: 10
+  distance: 15
   shift: 1
   startDistance: 10
 --- !u!4 &1291496078

@@ -8,14 +8,15 @@ public class Ball : MonoBehaviour
 {
     public static Ball Instance;
     [SerializeField] private float jumpForce;
-    [SerializeField] private float forceIncrease;
-    [SerializeField] private float forceIncreaseSeconds;
+    [SerializeField] private float gravityScaleMultiplier;
     private Rigidbody2D rb;
+    private float speed;
 
     private void Awake()
     {
         Instance = this;
-        rb = GetComponent<Rigidbody2D>(); 
+        rb = GetComponent<Rigidbody2D>();
+        GameManager.Instance.ChangeSpeed.AddListener(ChangeSpeed);
     }
 
     public void Start()
@@ -54,7 +55,7 @@ public class Ball : MonoBehaviour
 
     private void Jump()
     {
-        rb.velocity = new Vector2(0, Mathf.Clamp(rb.velocity.y + jumpForce, -Mathf.Infinity, jumpForce));
+        rb.velocity = new Vector2(0, Mathf.Clamp(rb.velocity.y + jumpForce * speed, -Mathf.Infinity, jumpForce * speed));
     }
 
     private void Fail()
@@ -64,5 +65,11 @@ public class Ball : MonoBehaviour
 
         if (gameUI == null) return;
         gameUI.GameEnd.Invoke();
+    }
+
+    private void ChangeSpeed(float speed)
+    {
+        rb.gravityScale = speed * gravityScaleMultiplier;
+        this.speed = speed;
     }
 }

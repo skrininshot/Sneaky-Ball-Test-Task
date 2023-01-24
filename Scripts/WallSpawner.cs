@@ -5,11 +5,7 @@ using UnityEngine;
 public class WallSpawner : MonoBehaviour
 {
     [HideInInspector] public float Speed;
-    [SerializeField] private float difficultSpeedMultiplier;
-    [SerializeField] private float startSpeed;
-    [SerializeField] private float defaultDifficult;
-    private float difficult;
-    [SerializeField] private float difficultPoint;
+    [SerializeField] private float SpeedMultiplier;
 
     [SerializeField] private Wall prefab;
     [Range(0, 10)] public int MinHeight;
@@ -23,6 +19,8 @@ public class WallSpawner : MonoBehaviour
 
     private void Awake()
     {
+        GameManager.Instance.ChangeSpeed.AddListener(ChangeSpeed);
+
         Vector2 worldLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
         Vector2 worldRight = Camera.main.ScreenToWorldPoint(new Vector2(Camera.main.pixelWidth, 0));
         float worldLength = Vector2.Distance(worldLeft, worldRight);
@@ -36,6 +34,7 @@ public class WallSpawner : MonoBehaviour
         }
 
         lastRespawned = walls[walls.Count - 1];
+
     }
 
     public void WallsSetEnabled(bool moving)
@@ -48,35 +47,12 @@ public class WallSpawner : MonoBehaviour
         if (moving)
         {
             Spawn();
-            StartCoroutine(DifficultIncreaseTimer());
-        }
-        else
-        {
-            StopTimer();
         }
     }
 
-    private void ChangeSpeed()
+    private void ChangeSpeed(float speed)
     {
-        difficult += difficultPoint;
-        Speed = startSpeed + difficultSpeedMultiplier * difficult;
-    }
-
-    private IEnumerator DifficultIncreaseTimer()
-    {
-        difficult = defaultDifficult;
-        WaitForSeconds frequency = new (1);
-        while (true)
-        {
-            yield return frequency;
-            ChangeSpeed();
-        }
-    }
-
-    private void StopTimer()
-    {
-        StopAllCoroutines();
-        difficult = defaultDifficult;
+        Speed = SpeedMultiplier * speed;
     }
 
     private void Spawn()
