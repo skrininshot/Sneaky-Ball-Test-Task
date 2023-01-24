@@ -75,7 +75,7 @@ public class WallSpawner : MonoBehaviour
 
     private void StopTimer()
     {
-        StopCoroutine(DifficultIncreaseTimer());
+        StopAllCoroutines();
         difficult = defaultDifficult;
     }
 

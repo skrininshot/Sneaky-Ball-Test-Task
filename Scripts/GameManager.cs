@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour
     public UnityEvent GameEnd;
     public UnityEvent ChangeScore;
 
-    public enum Difficult { Easy, Normal, Hard }
-    public Difficult SelectedDifficult = Difficult.Normal;
     private int score = 0;
     private int secondsCounter = 0;
 
@@ -48,30 +46,30 @@ public class GameManager : MonoBehaviour
 
         StartGame.Invoke();
         StartCoroutine(SessionTimer());
+
+        ClearData();
     }
 
     public void GameOver()
     {
         PlayerPrefs.SetInt("DiedTimes", PlayerPrefs.GetInt("DiedTimes", 0) + 1);
-        StopCoroutine(SessionTimer());
+        StopAllCoroutines();
 
         headerText.text = "Game Over";
         durationCounterText.enabled = true;
-        durationCounterText.text = $"You lived: {SecondsToClockFace(PlayerPrefs.GetInt("Seconds", 0))}";
+        durationCounterText.text = $"You lived: {SecondsToClockFace(secondsCounter)}";
         timesCounterText.enabled = true;
         timesCounterText.text = $"You died {PlayerPrefs.GetInt("DiedTimes", 1)} times";
         menuTipText.text = "Choose difficult and restart";
         menuScore.enabled = true;
         UpdateMenuScore();
         UpdateMenuMaxScore();
-        ClearData();
     }
 
     public void AddPoint()
     {
         score++;
         UpdateInGameScore();
-        PlayerPrefs.SetInt("LastScore", score);
 
         if (score > PlayerPrefs.GetInt("MaxScore", 0))
         {
@@ -91,13 +89,14 @@ public class GameManager : MonoBehaviour
 
     private void UpdateMenuScore()
     {
-        menuScore.text = "Score: " + PlayerPrefs.GetInt("LastScore", 0).ToString();
+        menuScore.text = "Score: " + score.ToString();
     }
 
     private void ClearData()
     {
         secondsCounter = 0;
         score = 0;
+        Debug.Log("Data clear");
     }
 
     private IEnumerator SessionTimer()
@@ -106,7 +105,6 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
-            PlayerPrefs.SetInt("Seconds", secondsCounter);
             secondsCounter++;
             yield return second;
         }
