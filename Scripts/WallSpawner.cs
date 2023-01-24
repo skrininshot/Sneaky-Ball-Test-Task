@@ -16,21 +16,43 @@ public class WallSpawner : MonoBehaviour
 
     private List<Wall> walls = new List<Wall>();
     private Wall lastRespawned;
+
     private void Awake()
     {
-        Speed = additiveSpeed + difficultSpeedMultiplier * PlayerPrefs.GetInt("Difficult", 1);
-
         Vector2 worldLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
         Vector2 worldRight = Camera.main.ScreenToWorldPoint(new Vector2(Camera.main.pixelWidth, 0));
         float worldLength = Vector2.Distance(worldLeft, worldRight);
         int count = Mathf.CeilToInt(worldLength / distance);
 
-        for(int i = 0; i < count; i++)
+        Speed = additiveSpeed + difficultSpeedMultiplier * (int)GameManager.Instance.SelectedDifficult;
+
+        for (int i = 0; i < count; i++)
         {
             Wall wall = Instantiate(prefab, transform);
-            float spawnDistance = startDistance + (distance * shift) + distance * i;
-            wall.transform.position = new Vector3(spawnDistance, 0);
+            wall.enabled = false;
             walls.Add(wall);
+        }
+
+        lastRespawned = walls[walls.Count - 1];
+    }
+
+    public void WallsSetEnabled(bool moving)
+    {
+        foreach(Wall wall in walls)
+        {
+            wall.enabled = moving;
+        }
+
+        if (moving) SetOnStart();
+    }
+
+    private void SetOnStart()
+    {
+        for (int i = 0; i < walls.Count; i++)
+        {
+            float spawnDistance = startDistance + (distance * shift) + distance * i;
+            walls[i].transform.position = new Vector3(spawnDistance, walls[i].transform.position.y);
+            walls[i].enabled = true;
         }
 
         lastRespawned = walls[walls.Count - 1];

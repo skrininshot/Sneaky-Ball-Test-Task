@@ -7,9 +7,9 @@ public class HorizontalWall : Wall
         base.Awake();
     }
 
-    protected override void Start()
+    protected override void OnEnable()
     {
-        base.Start();
+        base.OnEnable();
     }
 
     public override void Change()

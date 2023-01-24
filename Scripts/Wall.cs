@@ -10,6 +10,7 @@ public abstract class Wall : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     protected BoxCollider2D boxCollider;
     protected WallSpawner spawner;
+    protected bool jumped = false;
 
     protected virtual void Awake()
     {
@@ -18,11 +19,11 @@ public abstract class Wall : MonoBehaviour
         halfWidth = size.x * 0.5f;
     }
 
-    protected virtual void Start()
+    protected virtual void OnEnable()
     {
         spawner = GetComponentInParent<WallSpawner>();
         end = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
-        Change();
+        UpdateWall();
     }
 
     public abstract void Change();
@@ -33,9 +34,23 @@ public abstract class Wall : MonoBehaviour
 
         if (transform.position.x + halfWidth < end.x)
         {
+            jumped = false;
             spawner.Respawn(this);
-            Change();
+            UpdateWall();
         }
+
+        if (jumped) return;
+        if (transform.position.x < Ball.Instance.transform.position.x)
+        {
+            jumped = true;
+            GameManager.Instance.ChangeScore.Invoke();
+        }
+    }
+
+    public virtual void UpdateWall()
+    {
+        jumped = false;
+        Change();
     }
 
     protected virtual int RandomHeight()

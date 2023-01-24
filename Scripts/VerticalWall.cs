@@ -7,9 +7,9 @@ public class VerticalWall : Wall
         base.Awake();
     }
 
-    protected override void Start()
+    protected override void OnEnable()
     {
-        base.Start();
+        base.OnEnable();
     }
 
     protected override void MoveSpeed()

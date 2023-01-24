@@ -6,6 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
+    public static Ball Instance;
     [SerializeField] private float jumpForce;
     [SerializeField] private float forceIncrease;
     [SerializeField] private float forceIncreaseSeconds;
@@ -13,11 +14,14 @@ public class Ball : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         rb = GetComponent<Rigidbody2D>(); 
     }
 
-    private void Start()
+    public void Start()
     {
+        rb.velocity = Vector3.zero;
+        transform.position = Vector3.zero;
         Jump();
         StartCoroutine(TimerAddForce());
     }
@@ -67,8 +71,10 @@ public class Ball : MonoBehaviour
     private void Fail()
     {
         StopCoroutine(TimerAddForce());
-        GameUI gameUI = FindObjectOfType<GameUI>();
+        gameObject.SetActive(false);
+        GameManager gameUI = FindObjectOfType<GameManager>();
+
         if (gameUI == null) return;
-        gameUI.gameOver.Invoke();
+        gameUI.GameEnd.Invoke();
     }
 }

@@ -3,8 +3,17 @@ using UnityEngine;
 public class BallSpawner : MonoBehaviour
 {
     [SerializeField] private Ball prefab;
-    public void SpawnBall()
+    private Ball ball;
+
+    private void Start()
     {
-        Instantiate(prefab);
+        ball = Instantiate(prefab);
+        ball.gameObject.SetActive(false);
+    }
+
+    public void StartBall()
+    {
+        ball.gameObject.SetActive(true);
+        ball.Start();
     }
 }
