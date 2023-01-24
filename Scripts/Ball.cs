@@ -23,7 +23,6 @@ public class Ball : MonoBehaviour
         rb.velocity = Vector3.zero;
         transform.position = Vector3.zero;
         Jump();
-        StartCoroutine(TimerAddForce());
     }
 
     private void Update()
@@ -58,19 +57,8 @@ public class Ball : MonoBehaviour
         rb.velocity = new Vector2(0, Mathf.Clamp(rb.velocity.y + jumpForce, -Mathf.Infinity, jumpForce));
     }
 
-    private IEnumerator TimerAddForce()
-    {
-        while (true)
-        {
-            WaitForSeconds wait = new(forceIncreaseSeconds);
-            yield return wait;
-            jumpForce += forceIncrease;
-        }
-    }
-
     private void Fail()
     {
-        StopCoroutine(TimerAddForce());
         gameObject.SetActive(false);
         GameManager gameUI = FindObjectOfType<GameManager>();
 

@@ -12,14 +12,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text timesCounterText;
     [SerializeField] private Text menuTipText;
     [SerializeField] private Text inGameScore;
+    [SerializeField] private Text menuScore;
+    [SerializeField] private Text menuMaxScore;
 
     public UnityEvent StartGame;
     public UnityEvent GameEnd;
-
     public UnityEvent ChangeScore;
+
     public enum Difficult { Easy, Normal, Hard }
-    public Difficult SelectedDifficult;
+    public Difficult SelectedDifficult = Difficult.Normal;
     private int score = 0;
+    private int secondsCounter = 0;
 
     private void Awake()
     {
@@ -33,28 +36,15 @@ public class GameManager : MonoBehaviour
         headerText.text = "Sneaky Ball";
         durationCounterText.enabled = false;
         timesCounterText.enabled = false;
-        menuTipText.text = "Choose difficult and start";
+        menuTipText.text = "tap button to start";
+        menuScore.enabled = false;
+        UpdateMenuMaxScore();
     }
 
-    public void SelectEasy()
-    {
-        StartInSelectedDifficult(Difficult.Easy);
-    }
-
-    public void SelectNormal()
-    {
-        StartInSelectedDifficult(Difficult.Normal);
-    }
-
-    public void SelectHard()
-    {
-        StartInSelectedDifficult(Difficult.Hard);
-    }
-
-    private void StartInSelectedDifficult(Difficult difficult)
+    public void Play()
     {
         score = 0;
-        UpdateScore();
+        UpdateInGameScore();
 
         StartGame.Invoke();
         StartCoroutine(SessionTimer());
@@ -71,26 +61,48 @@ public class GameManager : MonoBehaviour
         timesCounterText.enabled = true;
         timesCounterText.text = $"You died {PlayerPrefs.GetInt("DiedTimes", 1)} times";
         menuTipText.text = "Choose difficult and restart";
-
-        score = 0;
-        UpdateScore();
+        menuScore.enabled = true;
+        UpdateMenuScore();
+        UpdateMenuMaxScore();
+        ClearData();
     }
 
     public void AddPoint()
     {
         score++;
-        UpdateScore();
+        UpdateInGameScore();
+        PlayerPrefs.SetInt("LastScore", score);
+
+        if (score > PlayerPrefs.GetInt("MaxScore", 0))
+        {
+            PlayerPrefs.SetInt("MaxScore", score);
+        }
     }
 
-    private void UpdateScore()
+    private void UpdateInGameScore()
     {
-        inGameScore.text = score.ToString();
+        inGameScore.text = score.ToString();  
+    }
+
+    private void UpdateMenuMaxScore()
+    {
+        menuMaxScore.text = "Max Score: " + PlayerPrefs.GetInt("MaxScore", 0).ToString();
+    }
+
+    private void UpdateMenuScore()
+    {
+        menuScore.text = "Score: " + PlayerPrefs.GetInt("LastScore", 0).ToString();
+    }
+
+    private void ClearData()
+    {
+        secondsCounter = 0;
+        score = 0;
     }
 
     private IEnumerator SessionTimer()
     {
         WaitForSeconds second = new (1);
-        int secondsCounter = 0;
 
         while (true)
         {
