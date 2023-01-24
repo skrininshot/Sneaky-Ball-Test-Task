@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -60,7 +59,7 @@ public class GameManager : MonoBehaviour
         durationCounterText.text = $"You lived: {SecondsToClockFace(secondsCounter)}";
         timesCounterText.enabled = true;
         timesCounterText.text = $"You died {PlayerPrefs.GetInt("DiedTimes", 1)} times";
-        menuTipText.text = "Choose difficult and restart";
+        menuTipText.text = "tap button to restart";
         menuScore.enabled = true;
         UpdateMenuScore();
         UpdateMenuMaxScore();
@@ -96,7 +95,6 @@ public class GameManager : MonoBehaviour
     {
         secondsCounter = 0;
         score = 0;
-        Debug.Log("Data clear");
     }
 
     private IEnumerator SessionTimer()

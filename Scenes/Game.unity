@@ -337,7 +337,6 @@ MonoBehaviour:
   ChangeScore:
     m_PersistentCalls:
       m_Calls: []
-  SelectedDifficult: 0
 --- !u!1 &164707489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1188,7 +1187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 2
   difficultSpeedMultiplier: 1
-  startSpeed: 3
+  startSpeed: 2
   defaultDifficult: 1
   difficultPoint: 0.1
   prefab: {fileID: 7564707063280714804, guid: 05dce6316d9dd7b41a08b9b811610711, type: 3}
@@ -1353,14 +1352,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 2
   difficultSpeedMultiplier: 1
-  startSpeed: 3
+  startSpeed: 4
   defaultDifficult: 1
   difficultPoint: 0.1
   prefab: {fileID: 5077060027054132100, guid: 20c8e751d2c06e04c99cefb34200e32a, type: 3}
   MinHeight: 0
   MaxHeight: 5
-  distance: 8
-  shift: 0.75
+  distance: 10
+  shift: 1
   startDistance: 10
 --- !u!4 &1291496078
 Transform:
