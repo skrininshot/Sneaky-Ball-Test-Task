@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WallSpawner : MonoBehaviour
 {
-    [HideInInspector] public float Speed;
+    [HideInInspector] public float Speed => SpeedMultiplier * GameManager.Instance.WorldSpeed;
     [SerializeField] private float SpeedMultiplier;
 
     [SerializeField] private Wall prefab;
@@ -19,8 +19,6 @@ public class WallSpawner : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.Instance.ChangeSpeed.AddListener(ChangeSpeed);
-
         Vector2 worldLeft = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
         Vector2 worldRight = Camera.main.ScreenToWorldPoint(new Vector2(Camera.main.pixelWidth, 0));
         float worldLength = Vector2.Distance(worldLeft, worldRight);
@@ -46,16 +44,11 @@ public class WallSpawner : MonoBehaviour
 
         if (moving)
         {
-            Spawn();
+            SpawnOnStart();
         }
     }
 
-    private void ChangeSpeed(float speed)
-    {
-        Speed = SpeedMultiplier * speed;
-    }
-
-    private void Spawn()
+    private void SpawnOnStart()
     {
         for (int i = 0; i < walls.Count; i++)
         {
@@ -70,6 +63,7 @@ public class WallSpawner : MonoBehaviour
     public void Respawn(Wall wall)
     {
         wall.transform.position = lastRespawned.transform.position + new Vector3(distance, 0, 0);
+        wall.UpdateWall();
         lastRespawned = wall;
     }
 }

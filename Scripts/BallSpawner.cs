@@ -8,12 +8,10 @@ public class BallSpawner : MonoBehaviour
     private void Start()
     {
         ball = Instantiate(prefab);
-        ball.gameObject.SetActive(false);
     }
 
     public void StartBall()
     {
-        ball.gameObject.SetActive(true);
-        ball.Start();
+        ball.StartBall();
     }
 }

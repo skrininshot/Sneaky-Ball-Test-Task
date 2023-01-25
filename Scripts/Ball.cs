@@ -8,26 +8,28 @@ public class Ball : MonoBehaviour
 {
     public static Ball Instance;
     [SerializeField] private float jumpForce;
+    private float gravitySpeed;
     [SerializeField] private float gravityScaleMultiplier;
     private Rigidbody2D rb;
-    private float speed;
+    private bool freeze = false;
 
     private void Awake()
     {
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
-        GameManager.Instance.ChangeSpeed.AddListener(ChangeSpeed);
+        Freeze();
     }
 
-    public void Start()
+    public void StartBall()
     {
-        rb.velocity = Vector3.zero;
+        Unfreeze();
         transform.position = Vector3.zero;
         Jump();
     }
 
     private void Update()
     {
+        ChangeSpeed(GameManager.Instance.WorldSpeed);
         if (GetInput())
         {
             Jump();
@@ -46,6 +48,8 @@ public class Ball : MonoBehaviour
 
     private bool GetInput()
     {
+        if (freeze) return false;
+
         return 
             Input.GetMouseButtonDown(0) || 
             Input.GetKeyDown(KeyCode.Space) || 
@@ -55,12 +59,13 @@ public class Ball : MonoBehaviour
 
     private void Jump()
     {
-        rb.velocity = new Vector2(0, Mathf.Clamp(rb.velocity.y + jumpForce * speed, -Mathf.Infinity, jumpForce * speed));
+        Debug.Log("Jump: " + rb.velocity);
+        rb.velocity = new Vector2(0, Mathf.Clamp(rb.velocity.y + jumpForce * gravitySpeed, -Mathf.Infinity, jumpForce * gravitySpeed));
     }
 
     private void Fail()
     {
-        gameObject.SetActive(false);
+        Freeze();
         GameManager gameUI = FindObjectOfType<GameManager>();
 
         if (gameUI == null) return;
@@ -69,7 +74,20 @@ public class Ball : MonoBehaviour
 
     private void ChangeSpeed(float speed)
     {
-        rb.gravityScale = speed * gravityScaleMultiplier;
-        this.speed = speed;
+        rb.gravityScale = gravityScaleMultiplier * speed;
+        gravitySpeed = speed;
+    }
+
+    private void Freeze()
+    {
+        rb.velocity = Vector2.zero;
+        freeze = true;
+        rb.Sleep();
+    }
+
+    private void Unfreeze()
+    {
+        freeze = false;
+        rb.WakeUp();
     }
 }

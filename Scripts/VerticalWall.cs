@@ -17,7 +17,7 @@ public class VerticalWall : Wall
         base.MoveSpeed();
     }
 
-    public override void Change()
+    public override void UpdateWall()
     {
         spriteRenderer.size = size;
         boxCollider.size = size;

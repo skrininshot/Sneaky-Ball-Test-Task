@@ -15,11 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text menuMaxScore;
     [SerializeField] private float minWorldSpeed;
     [SerializeField] private float worldSpeedIncreasePoint;
-    private float worldSpeed;
+    [HideInInspector] public float WorldSpeed;
 
     public UnityEvent StartGame;
     public UnityEvent GameEnd;
-    public UnityEvent<float> ChangeSpeed;
     public UnityEvent ChangeScore;
 
     private int score = 0;
@@ -51,7 +50,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SessionTimer());
 
         ClearData();
-        SetSpeed();
     }
 
     public void GameOver()
@@ -100,8 +98,7 @@ public class GameManager : MonoBehaviour
     {
         secondsCounter = 0;
         score = 0;
-        worldSpeed = minWorldSpeed;
-        SetSpeed();
+        WorldSpeed = minWorldSpeed;
     }
 
     private IEnumerator SessionTimer()
@@ -110,16 +107,15 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
-            SetSpeed();
+            IncreaseSpeed();
             secondsCounter++;
             yield return second;
         }
     }
 
-    private void SetSpeed()
+    private void IncreaseSpeed()
     {
-        worldSpeed += worldSpeedIncreasePoint;
-        ChangeSpeed.Invoke(worldSpeed);
+        WorldSpeed += worldSpeedIncreasePoint;
     }
 
     private string SecondsToClockFace(int seconds)
